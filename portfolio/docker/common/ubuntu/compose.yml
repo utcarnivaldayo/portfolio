@@ -1,0 +1,17 @@
+services:
+  dev-portfolio-common-ubuntu:
+    image: dev-portfolio-common-ubuntu:${GIT_BRANCH:-unknown}
+    container_name: dev-portfolio-common-ubuntu
+    build:
+      context: ../../../../
+      dockerfile: ./portfolio/docker/common/ubuntu/Dockerfile
+      target: dev
+      args:
+        - UBUNTU_VERSION=${PORTFOLIO_UBUNTU_VERSION:-24.04}
+        - USER_NAME=${PORTFOLIO_USER_NAME:-portfolio}
+        - USER_PASSWORD=${PORTFOLIO_USER_PASSWORD}
+    init: true
+    profiles:
+      - dev
+      - dev-portfolio
+      - dev-portfolio-common

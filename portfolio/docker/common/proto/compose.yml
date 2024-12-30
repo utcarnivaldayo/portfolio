@@ -1,0 +1,23 @@
+services:
+  dev-portfolio-common-proto:
+    image: dev-portfolio-common-proto:${GIT_BRANCH:-unknown}
+    container_name: dev-portfolio-common-proto
+    build:
+      context: ../../../../
+      dockerfile: ./portfolio/docker/common/proto/Dockerfile
+      target: dev
+      args:
+        - ENVIRONMENT=dev
+        - PROJECT=portfolio
+        - GIT_BRANCH=${GIT_BRANCH:-unknown}
+        - USER_NAME=${PORTFOLIO_USER_NAME:-portfolio}
+        - PROTO_VERSION=${PORTFOLIO_PROTO_VERSION:-0.44.1}
+    depends_on:
+      dev-portfolio-common-ubuntu:
+        condition: service_started
+        required: false
+    init: true
+    profiles:
+      - dev
+      - dev-portfolio
+      - dev-portfolio-common

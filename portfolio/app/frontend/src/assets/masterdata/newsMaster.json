@@ -1,0 +1,89 @@
+[
+  {
+    "date": "2021-01-12",
+    "link": "https://utcarnivaldayo.github.io/harigae_port/",
+    "newsId": 1,
+    "tags": [
+      "お知らせ",
+      "bootstrap",
+      "webassembly",
+      "就活"
+    ],
+    "title": "旧ポートフォリオサイトの公開"
+  },
+  {
+    "date": "2022-12-31",
+    "link": "https://zenn.dev/utcarnivaldayo/articles/ffeed5ac2e62bb",
+    "newsId": 2,
+    "tags": [
+      "技術記事",
+      "zenn",
+      "統計",
+      "数値計算",
+      "rust"
+    ],
+    "title": "インクリメンタルに複数の時系列データに対する平均・標準偏差を計算する"
+  },
+  {
+    "date": "2024-01-13",
+    "link": "https://zenn.dev/numagotatu/articles/2024-01-07-deploy-github-pages",
+    "newsId": 3,
+    "tags": [
+      "技術記事",
+      "zenn",
+      "react",
+      "github",
+      "githubactions"
+    ],
+    "title": "React コードを隠したまま GitHub Pages でサイトを公開する"
+  },
+  {
+    "date": "2024-04-13",
+    "link": "https://zenn.dev/numagotatu/articles/2024-04-07-docker-on-multipass",
+    "newsId": 4,
+    "tags": [
+      "技術記事",
+      "zenn",
+      "docker",
+      "multipass",
+      "ubuntu"
+    ],
+    "title": "Docker 環境を作るなら Ubuntu のクロスプラットフォームな仮想化ツール Multipass を使おう"
+  },
+  {
+    "date": "2024-06-28",
+    "link": "https://zenn.dev/numagotatu/articles/2024-04-13-init-vscode-extension",
+    "newsId": 5,
+    "tags": [
+      "技術記事",
+      "zenn",
+      "vscode"
+    ],
+    "title": "Workspace 単位で Remote-SSH 先のサーバーに VSCode 拡張を自動インストールしたい"
+  },
+  {
+    "date": "2024-06-30",
+    "link": "https://zenn.dev/numagotatu/articles/2024-06-23-pants-build-docker-build",
+    "newsId": 6,
+    "tags": [
+      "技術記事",
+      "zenn",
+      "docker",
+      "pants"
+    ],
+    "title": "pants でスマートな docker build をしよう!"
+  },
+  {
+    "date": "2024-12-29",
+    "link": "/#",
+    "newsId": 7,
+    "tags": [
+      "お知らせ",
+      "typescript",
+      "react",
+      "tailwindcss",
+      "tanstackrouter"
+    ],
+    "title": "TS + React + tailwindcss でポートフォリオサイトのリニューアル"
+  }
+]
