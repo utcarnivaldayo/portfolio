@@ -1,0 +1,40 @@
+services:
+  dev_frontend_vite:
+    image: dev_frontend_vite:docker-env
+    restart: on-failure
+    container_name: dev_frontend_vite
+    volumes:
+      - type: bind
+        source: app
+        target: /home/numa/app
+      - type: volume
+        source: dev_frontend_vite_node_modules
+        target: /home/numa/app/multipasser_client/node_modules
+    tty: true
+    stdin_open: true
+    networks:
+      - default
+
+  dev_backend_batch:
+    image: dev_backend_batch:docker-env
+    restart: on-failure
+    container_name: dev_backend_batch
+    volumes:
+      - type: bind
+        source: app
+        target: /home/numa/app
+      - type: volume
+        source: dev_backend_batch_target
+        target: /home/numa/app/target
+    tty: true
+    stdin_open: true
+    networks:
+      - default
+
+networks:
+  default:
+    name: dev
+
+volumes:
+  dev_backend_batch_target:
+  dev_frontend_vite_node_modules:

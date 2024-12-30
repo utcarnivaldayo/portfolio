@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "mosapride.zenkaku",
+    "ms-azuretools.vscode-docker",
+    "oderwat.indent-rainbow",
+    "shardulm94.trailing-spaces",
+    "streetsidesoftware.code-spell-checker"
+  ],
+  "unwantedRecommendations": []
+}

@@ -1,0 +1,179 @@
+#!/usr/bin/env bash
+
+set -ECeuo pipefail
+
+function is_sourced() {
+  ! [[ "${BASH_SOURCE[0]}" = "${0}" ]]
+}
+
+function import_library() {
+
+  local _command_path="${1}"
+
+  # import core library
+  # shellcheck source=/dev/null
+  source "${_command_path}/../multipass/lib/core.sh"
+
+  # import logger library
+  # shellcheck source=/dev/null
+  source "${_command_path}/../multipass/lib/logger.sh"
+
+  # import validator library
+  # shellcheck source=/dev/null
+  source "${_command_path}/../multipass/lib/validator.sh"
+
+  # import devcontainerlibrary
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/devcontainer.sh"
+}
+
+function set_command_env() {
+
+  export COMMAND_PATH=''
+  export COMMAND_NAME=''
+  COMMAND_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+  COMMAND_NAME="$(basename "${BASH_SOURCE[0]}")"
+  export COMMAND_LOCK_DIR="${COMMAND_PATH}/.lock-${COMMAND_NAME}"
+}
+
+function set_default_env() {
+
+  local _command_path="${1}"
+  export DEVCONTAINER_JSON="devcontainer.json"
+  export MIDDLEWARE_JSON="${_command_path}/config/middleware.json"
+  export DEFAULT_USER='vscode'
+  export LOGGER_FORMAT='json'
+  export DRY_RUN='false'
+  export VERBOSE='false'
+}
+
+function create_lock_dir() {
+
+  if [[ -d "${COMMAND_LOCK_DIR:-}" ]]; then
+    logger::error 'another process is running' >&2
+    logger::warn "please try again later and check ${COMMAND_LOCK_DIR}" >&2
+    trap - SIGINT SIGTERM ERR EXIT
+    exit 1
+  fi
+  mkdir "${COMMAND_LOCK_DIR}"
+}
+
+function cleanup() {
+  # NOTE: trap - is required to avoid recursive call this function.
+  trap - SIGINT SIGTERM ERR EXIT
+
+  rm -rf "${COMMAND_LOCK_DIR}"
+}
+
+function init() {
+  set_command_env
+  import_library "${COMMAND_PATH}"
+  set_default_env "${COMMAND_PATH}"
+  trap 'cleanup' 'SIGINT' 'SIGTERM' 'ERR' 'EXIT'
+  create_lock_dir
+}
+
+function usage() {
+  cat - <<EOS
+Usage: ${COMMAND_NAME}) [-h] [-u <user>] [-d <devcontainer-json>] [-m <midddleware-json>] [-n] [-f <log-format>] [-v]
+
+Script description:
+  Bundle script for post-create command
+
+Available options:
+
+-h, --help                    Print this help and exit
+-u, --user                    Set user name (default: ${DEFAULT_USER})
+-d, --devcontainer-json       Set devcontainer.json file path
+-m, --middleware-json         Set instance middleware.json path (default: ${MIDDLEWARE_JSON})
+-n, --dry-run                 Run the script in dry-run mode
+-f, --format                  Set log format (default: ${LOGGER_FORMAT})
+-v, --verbose                 Print debug info
+EOS
+}
+
+function post_create() {
+  init
+
+  local _user="${DEFAULT_USER}"
+  local _devcontainer_json="${DEVCONTAINER_JSON}"
+  local _middleware_json="${MIDDLEWARE_JSON}"
+  local _dry_run="${DRY_RUN}"
+  local _verbose="${VERBOSE}"
+
+  # parse options
+  while :; do
+    case "${1-}" in
+    -u | --user)
+      _user="${2:-${_user}}"
+      shift
+      ;;
+    -d | --devcontainer-json)
+      _devcontainer_json="${2:-${_devcontainer_json}}"
+      shift
+      ;;
+    -m | --middleware-json)
+      _middleware_json="${2:-${_middleware_json}}"
+      shift
+      ;;
+    -n | --dry-run)
+      _dry_run='true'
+      ;;
+    -f | --format)
+      LOGGER_FORMAT="${2:-${LOGGER_FORMAT}}"
+      shift
+      ;;
+    -v | --verbose)
+      _verbose='true'
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    -?*)
+      usage
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+    esac
+    shift
+  done
+
+  local -r _user
+  local -r _devcontainer_json
+  local -r _middleware_json
+  local -r _dry_run
+  local -r _verbose
+
+  [[ "${_verbose}" = 'true' ]] && set -x
+
+  logger::info "${COMMAND_NAME} start" >&2
+
+  logger::info "add bashrc gitignore io start" >&2
+  devcontainer::add_bashrc_gitignore_io "${_middleware_json}" "${_user}"
+  logger::info "add bashrc gitignore io end" >&2
+
+  logger::info "add bashrc direnv hook start" >&2
+  devcontainer::add_bashrc_direnv_hook "${_middleware_json}" "${_user}"
+  logger::info "add bashrc direnv hook end" >&2
+
+  logger::info "install apt packages start" >&2
+  devcontainer::install_apt_get_packages "${_middleware_json}" "${_user}"
+  logger::info "install apt packages end" >&2
+
+  logger::info "install packages required run command start" >&2
+  devcontainer::install_packages "${_middleware_json}" "${_user}"
+  logger::info "install packages required run command end" >&2
+
+  logger::info "install packages with proto start" >&2
+  devcontainer::proto_install_packages "${_middleware_json}" "${_user}"
+  logger::info "install packages with proto end" >&2
+
+  logger::info "${COMMAND_NAME} end" >&2
+}
+
+if ! is_sourced; then
+  post_create "$@"
+fi

@@ -1,0 +1,21 @@
+---
+force: true
+---
+
+services:
+  dev-{{ project_name | kebab_case }}-common-ubuntu:
+    image: dev-{{ project_name | kebab_case }}-common-ubuntu:${GIT_BRANCH:-unknown}
+    container_name: dev-{{ project_name | kebab_case }}-common-ubuntu
+    build:
+      context: ../../../../
+      dockerfile: ./{{ project_name | kebab_case }}/docker/common/ubuntu/Dockerfile
+      target: dev
+      args:
+        - UBUNTU_VERSION={{ '${' ~ project_name | upper_snake_case }}_UBUNTU_VERSION:-24.04}
+        - USER_NAME={{ '${' ~ project_name | upper_snake_case }}_USER_NAME:-{{ project_name | kebab_case }}}
+        - USER_PASSWORD={{ '${' ~ project_name | upper_snake_case }}_USER_PASSWORD}
+    init: true
+    profiles:
+      - dev
+      - dev-{{ project_name | kebab_case }}
+      - dev-{{ project_name | kebab_case }}-common

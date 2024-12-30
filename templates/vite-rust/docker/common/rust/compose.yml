@@ -1,0 +1,27 @@
+---
+force: true
+---
+
+services:
+  dev-{{ project_name | kebab_case }}-common-rust:
+    image: dev-{{ project_name | kebab_case }}-common-rust:${GIT_BRANCH:-unknown}
+    container_name: dev-{{ project_name | kebab_case }}-common-rust
+    build:
+      context: ../../../../
+      dockerfile: ./{{ project_name | kebab_case }}/docker/common/rust/Dockerfile
+      target: dev
+      args:
+        - ENVIRONMENT=dev
+        - PROJECT={{ project_name | kebab_case }}
+        - GIT_BRANCH=${GIT_BRANCH:-unknown}
+        - USER_NAME={{ '${' ~ project_name | upper_snake_case }}_USER_NAME:-{{ project_name | kebab_case }}}
+        - RUST_VERSION={{ '${' ~ project_name | upper_snake_case }}_RUST_VERSION:-1.83.0}
+    depends_on:
+      dev-{{ project_name | kebab_case }}-common-proto:
+        condition: service_started
+        required: false
+    init: true
+    profiles:
+      - dev
+      - dev-{{ project_name | kebab_case }}
+      - dev-{{ project_name | kebab_case }}-common

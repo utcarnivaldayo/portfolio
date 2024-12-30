@@ -1,0 +1,37 @@
+{
+  "apt": {
+    "apt_show_versions": "latest",
+    "apt_transport_https": "latest",
+    "avahi_daemon": "latest",
+    "build_essential": "latest",
+    "ca_certificates": "latest",
+    "curl": "latest",
+    "direnv": "latest",
+    "git": "latest",
+    "gzip": "latest",
+    "jq": "latest",
+    "nano": "latest",
+    "sshfs": "latest",
+    "tree": "latest",
+    "unzip": "latest",
+    "util_linux_extra": "latest",
+    "vim": "latest",
+    "xz_utils": "latest",
+    "zstd": "latest"
+  },
+  "runcmd": {
+    "act": "0.2.65",
+    "bats_core": "1.11.0",
+    "docker": "27.1.1",
+    "infisical": "0.28.4",
+    "mise": "latest",
+    "radicle": "latest",
+    "tilt": "0.33.19"
+  },
+  "snap": {
+    "aws_cli": "v2/stable",
+    "microk8s": "1.30/stable",
+    "opentofu": "latest/stable",
+    "yq": "v4/stable"
+  }
+}

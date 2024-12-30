@@ -1,0 +1,253 @@
+#!/usr/bin/env bash
+
+set -ECeuo pipefail
+
+function is_sourced() {
+  ! [[ "${BASH_SOURCE[0]}" = "${0}" ]]
+}
+
+function set_command_env() {
+
+  export COMMAND_PATH=''
+  export COMMAND_NAME=''
+  COMMAND_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+  COMMAND_NAME="$(basename "${BASH_SOURCE[0]}")"
+  export COMMAND_LOCK_DIR="${COMMAND_PATH}/.lock-${COMMAND_NAME}"
+}
+
+function import_library() {
+
+  local _command_path="${1}"
+
+  # import core library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/core.sh"
+
+  # import logger library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/logger.sh"
+
+  # import validator library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/validator.sh"
+
+  # import ssh library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/ssh.sh"
+
+  # import multipass library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/multipass.sh"
+}
+
+function set_default_env() {
+  export SSH_CONFIG="${HOME}/.ssh/config"
+  export CLUSTER_NAME='multipass'
+  export LOGGER_FORMAT='json'
+  export CLUSTER_NAME='multipass'
+  export INSTANCE_NAME=''
+  INSTANCE_NAME="$(core::monorepo_name)"
+  export BACKUP_SUFFIX='.backup'
+  export DRY_RUN='false'
+  export VERBOSE='false'
+}
+
+function create_lock_dir() {
+
+  if [[ -d "${COMMAND_LOCK_DIR:-}" ]]; then
+    logger::error 'another process is running' >&2
+    logger::warn "please try again later and check ${COMMAND_LOCK_DIR}" >&2
+    trap - SIGINT SIGTERM ERR EXIT
+    exit 1
+  fi
+  mkdir "${COMMAND_LOCK_DIR}"
+}
+
+function cleanup() {
+  # NOTE: trap - is required to avoid recursive call this function.
+  trap - SIGINT SIGTERM ERR EXIT
+
+  rm -rf "${COMMAND_LOCK_DIR}"
+}
+
+function usage() {
+  cat - <<EOS
+Usage: ${COMMAND_NAME}) [-h] [-s <ssh config>] [-i <instance name>] [-n] [-f <log-format>] [-v]
+
+Script description:
+  Purge the multipass instance with the current mono repository mounted.
+
+Available options:
+
+-h, --help                    Print this help and exit
+-s, --ssh-config              Set ssh config (default: ${SSH_CONFIG})
+-i, --instance                Set instance name (default: ${INSTANCE_NAME})
+-n, --dry-run                 Run the script in dry-run mode
+-f, --format                  Set log format (default: ${LOGGER_FORMAT})
+-v, --verbose                 Print debug info
+EOS
+}
+
+function init() {
+  set_command_env
+  import_library "${COMMAND_PATH}"
+  set_default_env
+  trap 'cleanup' 'SIGINT' 'SIGTERM' 'ERR' 'EXIT'
+  create_lock_dir
+}
+
+function validate_args() {
+  local -r _ssh_config="${1}"
+  local -r _instance_name="${2}"
+  local -r _logger_format="${3}"
+
+  validator::file_exists "${_ssh_config}" || return 1
+  validator::is_rfc_1123 "${_instance_name}" || return 1
+
+  case "${_logger_format}" in
+  json | tsv | csv) ;;
+  *)
+    logger::error "${_logger_format} is invalid"
+    return 1
+    ;;
+  esac
+}
+
+function check_exists_instance() {
+  local -r _instance_name="${1}"
+  logger::info "check ${_instance_name} instance start"
+  if ! multipass::has_instance "${_instance_name}"; then
+    logger::warn "${_instance_name} instance is not exist"
+  fi
+  logger::info "check ${_instance_name} instance end"
+}
+
+function delete_instance() {
+  local -r _instance_name="${1}"
+  logger::info "delete ${_instance_name} instance start"
+  if [[ "${_dry_run}" = 'true' ]]; then
+    logger::info "multipass delete ${_instance_name} -p"
+  else
+    multipass delete "${_instance_name}" -p &>/dev/null || :
+  fi
+  logger::info "delete ${_instance_name} instance end"
+}
+
+function delete_cloud_init() {
+  local -r _instance_name="${1}"
+  local -r _command_path="${2}"
+  logger::info "delete ${_instance_name} cloud-init start"
+  if [[ "${_dry_run}" = 'true' ]]; then
+    logger::info "rm -f ${_command_path}/${_instance_name}.yml"
+  else
+    rm -f "${_command_path}/${_instance_name}.yml" &>/dev/null || :
+  fi
+  logger::info "delete ${_instance_name} cloud-init end"
+}
+
+function delete_ssh_settings() {
+  local -r _ssh_config="${1}"
+  local -r _cluster_name="${2}"
+  local -r _instance_name="${3}"
+  local -r _backup_suffix="${4}"
+  local -r _dry_run="${5}"
+
+  logger::info "delete ssh setting for ${_instance_name} start"
+
+  local _ssh_config_dir=''
+  _ssh_config_dir="$(dirname "${_ssh_config}")"
+  local -r _ssh_config_dir
+  validator::directory_exists "${_ssh_config_dir}" || return 1
+
+  ssh::get_workspace "${_ssh_config_dir}" "${_cluster_name}" "${_instance_name}" &>/dev/null || return 1
+
+  local -a _ssh_delete_settings_args=()
+  _ssh_delete_settings_args+=("${_ssh_config_dir}")
+  _ssh_delete_settings_args+=("${_cluster_name}")
+  _ssh_delete_settings_args+=("${_instance_name}")
+  _ssh_delete_settings_args+=("${_backup_suffix}")
+  local -ra _ssh_delete_settings_args
+
+  if [[ "${_dry_run}" = 'true' ]]; then
+    logger::info "ssh::delete_settings ${_ssh_delete_settings_args[*]}"
+  else
+    ssh::delete_settings "${_ssh_delete_settings_args[@]}"
+  fi
+
+  logger::info "delete ssh setting for ${_instance_name} end"
+}
+
+function purge() {
+  init
+
+  # default values
+  local _ssh_config="${SSH_CONFIG}"
+  local _instance_name="${INSTANCE_NAME}"
+  local _dry_run="${DRY_RUN}"
+  local _verbose="${VERBOSE}"
+
+  # parse options
+  while :; do
+    case "${1-}" in
+    -s | --ssh-config)
+      _ssh_config="${2:-${_ssh_config}}"
+      shift
+      ;;
+    -i | --instance)
+      _instance_name="${2:-${_instance_name}}"
+      shift
+      ;;
+    -n | --dry-run)
+      _dry_run='true'
+      ;;
+    -f | --format)
+      LOGGER_FORMAT="${2:-${LOGGER_FORMAT}}"
+      shift
+      ;;
+    -v | --verbose)
+      _verbose='true'
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    -?*)
+      usage
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+    esac
+    shift
+  done
+
+  local -r _ssh_config
+  local -r _instance_name
+  local -r _dry_run
+  local -r _verbose
+
+  [[ "${_verbose}" = 'true' ]] && set -x
+
+  logger::info "${COMMAND_NAME} start" >&2
+
+  validate_args "${_ssh_config}" "${_instance_name}" "${LOGGER_FORMAT}" >&2 || exit 1
+  check_exists_instance "${_instance_name}" >&2 || exit 1
+  delete_instance "${_instance_name}" >&2 || exit 1
+  delete_cloud_init "${_instance_name}" "${COMMAND_PATH}" >&2 || exit 1
+
+  local -a _delete_ssh_settings_args=()
+  _delete_ssh_settings_args+=("${_ssh_config}")
+  _delete_ssh_settings_args+=("${CLUSTER_NAME}")
+  _delete_ssh_settings_args+=("${_instance_name}")
+  _delete_ssh_settings_args+=("${BACKUP_SUFFIX}")
+  _delete_ssh_settings_args+=("${_dry_run}")
+  local -ra _delete_ssh_settings_args
+  delete_ssh_settings "${_delete_ssh_settings_args[@]}" >&2 || exit 1
+
+  logger::info "${COMMAND_NAME} end" >&2
+}
+
+if ! is_sourced; then
+  purge "$@"
+fi

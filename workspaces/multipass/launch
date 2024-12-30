@@ -1,0 +1,583 @@
+#!/usr/bin/env bash
+
+set -ECeuo pipefail
+
+function is_sourced() {
+  ! [[ "${BASH_SOURCE[0]}" = "${0}" ]]
+}
+
+function set_command_env() {
+
+  export COMMAND_PATH=''
+  export COMMAND_NAME=''
+  COMMAND_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+  COMMAND_NAME="$(basename "${BASH_SOURCE[0]}")"
+  export COMMAND_LOCK_DIR="${COMMAND_PATH}/.lock-${COMMAND_NAME}"
+}
+
+function import_library() {
+
+  local _command_path="${1}"
+
+  # import core library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/core.sh"
+
+  # import logger library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/logger.sh"
+
+  # import validator library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/validator.sh"
+
+  # import ssh library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/ssh.sh"
+
+  # import multipass library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/multipass.sh"
+
+  # import cloud_init library
+  # shellcheck source=/dev/null
+  source "${_command_path}/lib/cloud-init.sh"
+}
+
+function set_multipass_env() {
+
+  export USER_NAME=''
+  USER_NAME="$(core::monorepo_name)"
+  export USER_PASSWORD=''
+  USER_PASSWORD="$(core::monorepo_name)"
+  export INSTANCE_NAME=''
+  INSTANCE_NAME="$(core::monorepo_name)"
+  export HOSTNAME=''
+  HOSTNAME="$(core::monorepo_name)"
+  export CPUS=4
+  export DISK='48G'
+  export MEMORY='8G'
+  export TAG='lts'
+  export TIMEOUT=3600
+  export SSH_PORT=22
+}
+
+function set_default_env() {
+
+  local _command_path="${1}"
+  export SSH_CONFIG="${HOME}/.ssh/config"
+  export MIDDLEWARE_JSON="${_command_path}/config/middleware.json"
+  export VSCODE_EXTENSIONS_JSON="${_command_path}/config/extensions.json"
+  export COMPOSE_YAML=''
+  export CLUSTER_NAME='multipass'
+  export LOGGER_FORMAT='json'
+  export BACKUP_SUFFIX='.backup'
+  export DRY_RUN='false'
+  export VERBOSE='false'
+}
+
+function create_lock_dir() {
+
+  if [[ -d "${COMMAND_LOCK_DIR:-}" ]]; then
+    logger::error 'another process is running' >&2
+    logger::warn "please try again later and check ${COMMAND_LOCK_DIR}" >&2
+    trap - SIGINT SIGTERM ERR EXIT
+    exit 1
+  fi
+  mkdir "${COMMAND_LOCK_DIR}"
+}
+
+function cleanup() {
+  # NOTE: trap - is required to avoid recursive call this function.
+  trap - SIGINT SIGTERM ERR EXIT
+
+  rm -rf "${COMMAND_LOCK_DIR}"
+}
+
+function usage() {
+  validator::command_exists 'basename' >&2 || exit 1
+  cat - <<EOS
+Usage: ${COMMAND_NAME} [-h] [-s <ssh config>] [-u <user>] [-p <password>] [-i <instance name>] [-H <hostname>] [-c <cpus>] [-d <disk>] [-m <memory>] [-t <tag>] [-T <timeout>] [-M <middleware-json>] [-e <vscode-extensions-json>] [-n] [-f <log-format>] [-v]
+
+Script description:
+  Launch the multipass instance with the current mono repository mounted.
+
+Available options:
+
+-h, --help                    Print this help and exit
+-s, --ssh-config              Set ssh config (default: ${SSH_CONFIG})
+-u, --user                    Set instance user name (default: ${USER_NAME})
+-p, --password                Set instance user password (default: ${USER_PASSWORD})
+-i, --instance                Set instance name (default: ${INSTANCE_NAME})
+-H, --hostname                Set instance hostname (default: ${HOSTNAME})
+-c, --cpus                    Set instance cpus (default: ${CPUS})
+-d, --disk                    Set instance disk (default: ${DISK})
+-m, --memory                  Set instance memory (default: ${MEMORY})
+-t, --tag                     Set instance image tag (default: ${TAG})
+-T, --timeout                 Set instance launch timeout (default: ${TIMEOUT})
+-M, --middleware-json         Set instance middleware.json path (default: ${MIDDLEWARE_JSON})
+-e, --vscode-extensions-json  Set instance extensions.json path (default: ${VSCODE_EXTENSIONS_JSON})
+-n, --dry-run                 Run the script in dry-run mode
+-f, --format                  Set log format (default: ${LOGGER_FORMAT})
+-v, --verbose                 Print debug info
+EOS
+}
+
+function init() {
+  set_command_env
+  import_library "${COMMAND_PATH}"
+  set_multipass_env
+  set_default_env "${COMMAND_PATH}"
+  trap 'cleanup' 'SIGINT' 'SIGTERM' 'ERR' 'EXIT'
+  create_lock_dir
+}
+
+function validate_args() {
+  local -r _ssh_config="${1:-}"
+  local -r _user="${2:-}"
+  local -r _password="${3:-}"
+  local -r _instance_name="${4:-}"
+  local -r _hostname="${5:-}"
+  local -r _cpus="${6:-}"
+  local -r _disk="${7:-}"
+  local -r _memory="${8:-}"
+  local -r _tag="${9:-}"
+  local -r _timeout="${10:-}"
+  local -r _middleware_json="${11:-}"
+  local -r _vscode_extensions_json="${12:-}"
+  local -r _logger_format="${13:-}"
+
+  validator::file_exists "${_ssh_config}" || return 1
+  validator::has_value "${_user}" || return 1
+  validator::has_value "${_password}" || return 1
+  validator::is_rfc_1123 "${_instance_name}" || return 1
+  validator::has_value "${_hostname}" || return 1
+  validator::is_positive_integer "${_cpus}" || return 1
+  if [[ ! "${_disk}" =~ ^[0-9]+[KMG]$ ]]; then
+    logger::error 'disk size is required'
+    return 1
+  fi
+  if [[ ! "${_memory}" =~ ^[0-9]+[KMG]$ ]]; then
+    logger::error 'memory size is required'
+    return 1
+  fi
+  validator::has_value "${_tag}" || return 1
+  validator::is_positive_integer "${_timeout}" || return 1
+  validator::json_file_exists "${_middleware_json}" || return 1
+  validator::command_exists 'jq' || return 1
+  if [[ "$(jq -r '.apt | has("avahi_daemon")' "${_middleware_json}")" = 'false' ]]; then
+    logger::error "avahi_daemon is required in ${_middleware_json}"
+    return 1
+  fi
+  if [[ "$(jq -r '.apt | has("sshfs")' "${_middleware_json}")" = 'false' ]]; then
+    logger::error "sshfs is required in ${_middleware_json}"
+    return 1
+  fi
+  if [[ "$(jq -r '.apt | has("curl")' "${_middleware_json}")" = 'false' ]]; then
+    logger::error "curl is required in ${_middleware_json}"
+    return 1
+  fi
+  validator::json_file_exists "${_vscode_extensions_json}" || return 1
+  case "${_logger_format}" in
+  json | tsv | csv) ;;
+  *)
+    logger::error "${_logger_format} is invalid"
+    return 1
+    ;;
+  esac
+}
+
+function check_exists_instance() {
+  local -r _instance_name="${1}"
+  logger::info "check ${_instance_name} instance start"
+  if multipass::has_instance "${_instance_name}"; then
+    logger::error "multipass ${_instance_name} instance is already exist"
+    return 1
+  fi
+  logger::info "check ${_instance_name} instance end"
+}
+
+function generate_ssh_comment() {
+  echo "$(core::rfc_3339)-$(core::target_triple)-$(uname -n)"
+}
+
+function get_authorized_key() {
+  local -r _ssh_config_dir="${1}"
+  local -r _cluster_name="${2}"
+  local -r _instance_name="${3}"
+  local -r _ssh_key_comment="${4}"
+  local -r _dry_run="${5}"
+
+  local _ssh_workspace=''
+  local _authorized_key=''
+  if [[ "${_dry_run}" = 'true' ]]; then
+    _authorized_key="ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAI== ${_ssh_key_comment} dry_run"
+  else
+    _ssh_workspace="$(ssh::get_workspace "${_ssh_config_dir}" "${_cluster_name}" "${_instance_name}")"
+    _authorized_key="$(ssh::get_public_key "${_ssh_workspace}" "${_instance_name}")"
+  fi
+  local -r _ssh_workspace
+  local -r _authorized_key
+  echo "${_authorized_key}"
+}
+
+function create_ssh_settings() {
+  local -r _ssh_config_dir="${1}"
+  local -r _cluster_name="${2}"
+  local -r _instance_name="${3}"
+  local -r _hostname="${4}"
+  local -r _user="${5}"
+  local -r _ssh_key_comment="${6}"
+  local -r _ssh_port="${7}"
+  local -r _compose_yaml="${8}"
+  local -r _backup_suffix="${9}"
+
+  # set ssh config
+  logger::info "create ssh setting for ${_instance_name} start"
+
+  ## set avahi hostname
+  local -r _avahi_hostname="${_hostname}.local"
+
+  local -a _create_settings_args=()
+  _create_settings_args+=("${_ssh_config_dir}")
+  _create_settings_args+=("${_cluster_name}")
+  _create_settings_args+=("${_instance_name}")
+  _create_settings_args+=("${_avahi_hostname}")
+  _create_settings_args+=("${_user}")
+  _create_settings_args+=("${_ssh_key_comment}")
+  _create_settings_args+=("${_ssh_port}")
+  _create_settings_args+=("${_compose_yaml}")
+  _create_settings_args+=("${_backup_suffix}")
+  local -ra _create_settings_args
+
+  if [[ "${_dry_run}" = 'true' ]]; then
+    logger::info "ssh::create_settings ${_create_settings_args[*]}"
+  else
+    ssh::create_settings "${_create_settings_args[@]}"
+  fi
+  logger::info "create ssh setting for ${_instance_name} end"
+}
+
+function build_cloud_init() {
+  local -r _instance_name="${1}"
+  local -r _hostname="${2}"
+  local -r _user="${3}"
+  local -r _password="${4}"
+  local -r _authorized_key="${5}"
+  local -r _remote_mount_point="${6}"
+  local -r _middleware_json="${7}"
+  local -r _vscode_extensions_json="${8}"
+  local -r _cloud_init="${9}"
+
+  # build cloud_init
+  logger::info "build cloud-init for ${_instance_name} start"
+
+  local -a _build_cloud_init_args=()
+  _build_cloud_init_args+=("${_hostname}")
+  _build_cloud_init_args+=("${_user}")
+  _build_cloud_init_args+=("${_password}")
+  _build_cloud_init_args+=("${_authorized_key}")
+  _build_cloud_init_args+=("${_remote_mount_point}")
+  _build_cloud_init_args+=("${_middleware_json}")
+  _build_cloud_init_args+=("${_vscode_extensions_json}")
+  local -ra _build_cloud_init_args
+  if [[ "${_dry_run}" = 'true' ]]; then
+    cloud_init::build_cloud_init "${_build_cloud_init_args[@]}"
+  else
+    cloud_init::build_cloud_init "${_build_cloud_init_args[@]}" >"${_cloud_init}"
+  fi
+  logger::info "build cloud-init for ${_instance_name} end"
+}
+
+function launch_instance() {
+  local -r _instance_name="${1}"
+  local -r _cpus="${2}"
+  local -r _disk="${3}"
+  local -r _memory="${4}"
+  local -r _cloud_init_path="${5}"
+  local -r _tag="${6}"
+  local -r _timeout="${7}"
+  local -r _dry_run="${8}"
+  local -r _verbose="${9}"
+
+  logger::info "launch ${_instance_name} instance start"
+
+  local -a _multipass_launch_args=()
+  _multipass_launch_args+=('--cpus' "${_cpus}")
+  _multipass_launch_args+=('--disk' "${_disk}")
+  _multipass_launch_args+=('--memory' "${_memory}")
+  _multipass_launch_args+=('--cloud-init' "${_cloud_init_path}")
+  _multipass_launch_args+=('--name' "${_instance_name}")
+  _multipass_launch_args+=('--timeout' "${_timeout}")
+  [[ "${_verbose}" = 'true' ]] && _multipass_launch_args+=('-vvvv')
+  _multipass_launch_args+=("${_tag}")
+  local -ra _multipass_launch_args
+
+  if [[ "${_dry_run}" = 'true' ]]; then
+    logger::info "multipass launch ${_multipass_launch_args[*]}"
+  else
+    multipass launch "${_multipass_launch_args[@]}"
+  fi
+  logger::info "launch ${_instance_name} instance end"
+}
+
+function mount() {
+  local -r _instance_name="${1}"
+  local -r _remote_mount_path="${2}"
+  local -r _dry_run="${3}"
+
+  logger::info "mount for ${_instance_name} start"
+
+  local _local_mount_path=''
+  _local_mount_path="$(core::monorepo_root)"
+  local -r _local_mount_path
+  validator::directory_exists "${_local_mount_path}" >&2 || exit 1
+
+  if [[ "${_dry_run}" = 'true' ]]; then
+    logger::info "multipass mount ${_local_mount_path} ${_instance_name}:${_remote_mount_path}"
+  else
+    multipass mount "${_local_mount_path}" "${_instance_name}:${_remote_mount_path}"
+  fi
+  logger::info "mount for ${_instance_name} end"
+}
+
+function test_ssh_connection() {
+  local -r _instance_name="${1}"
+  local -r _dry_run="${2}"
+
+  # ssh connection test
+  logger::info "connect with ssh for ${_instance_name} start"
+  if [[ "${_dry_run}" = 'true' ]]; then
+    logger::info "ssh::connect_and_exit ${_instance_name}"
+  else
+    ssh::connect_and_exit "${_instance_name}"
+  fi
+  logger::info "connect with ssh for ${_instance_name} end"
+}
+
+function launch() {
+  init
+
+  # default values
+  local _ssh_config="${SSH_CONFIG}"
+  local _user="${USER_NAME}"
+  local _password="${USER_PASSWORD}"
+  local _instance_name="${INSTANCE_NAME}"
+  local _hostname="${HOSTNAME}"
+  local _cpus="${CPUS}"
+  local _disk="${DISK}"
+  local _memory="${MEMORY}"
+  local _tag="${TAG}"
+  local _timeout="${TIMEOUT}"
+  local _middleware_json="${MIDDLEWARE_JSON}"
+  local _vscode_extensions_json="${VSCODE_EXTENSIONS_JSON}"
+  local _dry_run="${DRY_RUN}"
+  local _verbose="${VERBOSE}"
+
+  # parse options
+  while :; do
+    case "${1-}" in
+    -s | --ssh-config)
+      _ssh_config="${2:-${_ssh_config}}"
+      shift
+      ;;
+    -u | --user)
+      _user="${2:-${_user}}"
+      shift
+      ;;
+    -p | --password)
+      _password="${2:-${_password}}"
+      shift
+      ;;
+    -i | --instance)
+      _instance_name="${2:-${_instance_name}}"
+      shift
+      ;;
+    -H | --hostname)
+      _hostname="${2:-${_hostname}}"
+      shift
+      ;;
+    -c | --cpus)
+      _cpus="${2:-${_cpus}}"
+      shift
+      ;;
+    -d | --disk)
+      _disk="${2:-${_disk}}"
+      shift
+      ;;
+    -m | --memory)
+      _memory="${2:-${_memory}}"
+      shift
+      ;;
+    -t | --tag)
+      _tag="${2:-${_tag}}"
+      shift
+      ;;
+    -T | --timeout)
+      _timeout="${2:-${_timeout}}"
+      shift
+      ;;
+    -M | --middleware-json)
+      _middleware_json="${2:-${_middleware_json}}"
+      shift
+      ;;
+    -e | --vscode-extensions-json)
+      _vscode_extensions_json="${2:-${_vscode_extensions_json}}"
+      shift
+      ;;
+    -n | --dry-run)
+      _dry_run='true'
+      ;;
+    -f | --format)
+      LOGGER_FORMAT="${2:-${LOGGER_FORMAT}}"
+      shift
+      ;;
+    -v | --verbose)
+      _verbose='true'
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    -?*)
+      usage
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+    esac
+    shift
+  done
+
+  local -r _ssh_config
+  local -r _user
+  local -r _password
+  local -r _instance_name
+  local -r _hostname
+  local -r _cpus
+  local -r _disk
+  local -r _memory
+  local -r _tag
+  local -r _timeout
+  local -r _middleware_json
+  local -r _vscode_extensions_json
+  local -r _dry_run
+  local -r _verbose
+
+  [[ "${_verbose}" = 'true' ]] && set -x
+
+  logger::info "${COMMAND_NAME} start" >&2
+
+  # validate args
+  local -a _validate_args_args=()
+  _validate_args_args+=("${_ssh_config}")
+  _validate_args_args+=("${_user}")
+  _validate_args_args+=("${_password}")
+  _validate_args_args+=("${_instance_name}")
+  _validate_args_args+=("${_hostname}")
+  _validate_args_args+=("${_cpus}")
+  _validate_args_args+=("${_disk}")
+  _validate_args_args+=("${_memory}")
+  _validate_args_args+=("${_tag}")
+  _validate_args_args+=("${_timeout}")
+  _validate_args_args+=("${_middleware_json}")
+  _validate_args_args+=("${_vscode_extensions_json}")
+  _validate_args_args+=("${LOGGER_FORMAT}")
+  local -ra _validate_args_args
+  validate_args "${_validate_args_args[@]}" >&2 || exit 1
+
+  # check exists instance
+  check_exists_instance "${_instance_name}" >&2 || exit 1
+
+  # ssh config dir
+  local _ssh_config_dir=''
+  _ssh_config_dir="$(dirname "${_ssh_config}")"
+  local -r _ssh_config_dir
+  validator::directory_exists "${_ssh_config_dir}" >&2 || exit 1
+
+  # ssh key comment
+  local _ssh_key_comment=''
+  _ssh_key_comment="$(generate_ssh_comment)"
+  local -r _ssh_key_comment
+
+  local _cloud_init_path=''
+  _cloud_init_path="${COMMAND_PATH}/${_instance_name}.yml"
+  local -r _cloud_init_path
+
+  # create ssh settings
+  local -a _create_ssh_settings_args=()
+  _create_ssh_settings_args+=("${_ssh_config_dir}")
+  _create_ssh_settings_args+=("${CLUSTER_NAME}")
+  _create_ssh_settings_args+=("${_instance_name}")
+  _create_ssh_settings_args+=("${_hostname}")
+  _create_ssh_settings_args+=("${_user}")
+  _create_ssh_settings_args+=("${_ssh_key_comment}")
+  _create_ssh_settings_args+=("${SSH_PORT}")
+  _create_ssh_settings_args+=("${COMPOSE_YAML}")
+  _create_ssh_settings_args+=("${BACKUP_SUFFIX}")
+  local -ra _create_ssh_settings_args
+  create_ssh_settings "${_create_ssh_settings_args[@]}" >&2 || exit 1
+
+  local -a _get_authorized_key_args=()
+  _get_authorized_key_args+=("${_ssh_config_dir}")
+  _get_authorized_key_args+=("${CLUSTER_NAME}")
+  _get_authorized_key_args+=("${_instance_name}")
+  _get_authorized_key_args+=("${_ssh_key_comment}")
+  _get_authorized_key_args+=("${_dry_run}")
+  local -ra _get_authorized_key_args
+
+  local _authorized_key=''
+  _authorized_key="$(get_authorized_key "${_get_authorized_key_args[@]}")"
+  local -r _authorized_key
+  local -r _remote_mount_point="/home/${_user}/${_instance_name}"
+
+  # build cloud-init
+  local _build_cloud_init_args=()
+  _build_cloud_init_args+=("${_instance_name}")
+  _build_cloud_init_args+=("${_hostname}")
+  _build_cloud_init_args+=("${_user}")
+  _build_cloud_init_args+=("${_password}")
+  _build_cloud_init_args+=("${_authorized_key}")
+  _build_cloud_init_args+=("${_remote_mount_point}")
+  _build_cloud_init_args+=("${_middleware_json}")
+  _build_cloud_init_args+=("${_vscode_extensions_json}")
+  _build_cloud_init_args+=("${_cloud_init_path}")
+  local -ra _build_cloud_init_args
+  build_cloud_init "${_build_cloud_init_args[@]}" >&2 || exit 1
+
+  # launch instance
+  local -a _launch_instance_args=()
+  _launch_instance_args+=("${_instance_name}")
+  _launch_instance_args+=("${_cpus}")
+  _launch_instance_args+=("${_disk}")
+  _launch_instance_args+=("${_memory}")
+  _launch_instance_args+=("${_cloud_init_path}")
+  _launch_instance_args+=("${_tag}")
+  _launch_instance_args+=("${_timeout}")
+  _launch_instance_args+=("${_dry_run}")
+  _launch_instance_args+=("${_verbose}")
+  local -ra _launch_instance_args
+  launch_instance "${_launch_instance_args[@]}" >&2 || exit 1
+
+  # mount
+  local -a _mount_args=()
+  _mount_args+=("${_instance_name}")
+  _mount_args+=("${_remote_mount_point}")
+  _mount_args+=("${_dry_run}")
+  local -ra _mount_args
+  mount "${_mount_args[@]}" >&2 || exit 1
+
+  # test ssh connection
+  local -a _test_ssh_connection_args=()
+  _test_ssh_connection_args+=("${_instance_name}")
+  _test_ssh_connection_args+=("${_dry_run}")
+  local -ra _test_ssh_connection_args
+  test_ssh_connection "${_test_ssh_connection_args[@]}" >&2 || exit 1
+
+  logger::info "${COMMAND_NAME} end" >&2 || exit 1
+}
+
+if ! is_sourced; then
+  launch "$@"
+fi

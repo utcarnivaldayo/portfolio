@@ -1,0 +1,33 @@
+{
+  "recommendations": [
+    "mosapride.zenkaku",
+    "ms-azuretools.vscode-docker",
+    "oderwat.indent-rainbow",
+    "shardulm94.trailing-spaces",
+    "streetsidesoftware.code-spell-checker",
+    "mutantdino.resourcemonitor",
+    "aaron-bond.better-comments",
+    "mads-hartmann.bash-ide-vscode",
+    "jetmartin.bats",
+    "github.vscode-github-actions",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "foxundermoon.shell-format",
+    "timonwong.shellcheck",
+    "redhat.vscode-yaml",
+    "mechatroner.rainbow-csv",
+    "EditorConfig.EditorConfig",
+    "gamunu.opentofu",
+    "bierner.markdown-preview-github-styles",
+    "bierner.markdown-emoji",
+    "bierner.markdown-mermaid",
+    "johnpapa.vscode-peacock",
+    "tilt-dev.tiltfile",
+    "ms-vscode-remote.vscode-remote-extensionpack",
+    "DavidAnson.vscode-markdownlint",
+    "bierner.markdown-yaml-preamble",
+    "moonrepo.moon-console",
+    "ms-vsliveshare.vsliveshare"
+  ],
+  "unwantedRecommendations": []
+}

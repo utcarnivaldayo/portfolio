@@ -1,0 +1,26 @@
+title: 'vite-rust'
+description: |
+  frontend:
+    - vite (node)
+  backend:
+    - api server (rust)
+    - batch server (rust)
+    - mysql
+    - mysql-replica
+destination: '[project_name]'
+variables:
+  project_name:
+    type: 'string'
+    default: ''
+    required: true
+    prompt: 'project name?'
+  owner_name:
+    type: 'string'
+    default: ''
+    required: true
+    prompt: 'owner name?'
+  channel_name:
+    type: 'string'
+    default: ''
+    required: true
+    prompt: 'channel name?'
