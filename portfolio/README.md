@@ -1,8 +1,4 @@
----
-force: true
----
-
-# {{ project_name | kebab_case }}
+# portfolio
 
 ## リポジトリルートから docker compose を使えるようにする設定
 
@@ -11,7 +7,7 @@ force: true
 ```sh
 include:
   ...
-  - ./{{ project_name | kebab_case }}/compose.yml
+  - ./portfolio/compose.yml
 ```
 
 ## docker comoose による docker image の作成
@@ -19,14 +15,14 @@ include:
 ### 環境変数に `compose.yml` のデフォルト値を利用する場合
 
 ```sh
-docker compose --profile dev-{{ project_name | kebab_case }} build
+docker compose --profile dev-portfolio build
 ```
 
 ### `direnv` の環境変数を利用する場合
 
 ```sh
 direnv allow .
-docker compose --profile dev-{{ project_name | kebab_case }} build
+docker compose --profile dev-portfolio build
 ```
 
 ## docker comoose によるコンテナサービスの起動・終了
@@ -34,35 +30,35 @@ docker compose --profile dev-{{ project_name | kebab_case }} build
 ### サービス全体を起動
 
 ```sh
-docker compose --profile dev-{{ project_name | kebab_case }}-frontend --profile dev-{{ project_name | kebab_case }}-backend up -d
+docker compose --profile dev-portfolio-frontend --profile dev-portfolio-backend up -d
 ```
 
 ### サービス全体を終了
 
 ```sh
-docker compose --profile dev-{{ project_name | kebab_case }}-frontend --profile dev-{{ project_name | kebab_case }}-end down -v
+docker compose --profile dev-portfolio-frontend --profile dev-portfolio-end down -v
 ```
 
 ### frontend サービスを起動
 
 ```sh
-docker compose --profile dev-{{ project_name | kebab_case }}-frontend up -d
+docker compose --profile dev-portfolio-frontend up -d
 ```
 
 ### frontend サービスを終了
 
 ```sh
-docker compose --profile dev-{{ project_name | kebab_case }}-frontend down -v
+docker compose --profile dev-portfolio-frontend down -v
 ```
 
 ### backend サービスを起動
 
 ```sh
-docker compose --profile dev-{{ project_name | kebab_case }}-backend up -d
+docker compose --profile dev-portfolio-backend up -d
 ```
 
 ### backend サービスを終了
 
 ```sh
-docker compose --profile dev-{{ project_name | kebab_case }}-backend down -v
+docker compose --profile dev-portfolio-backend down -v
 ```

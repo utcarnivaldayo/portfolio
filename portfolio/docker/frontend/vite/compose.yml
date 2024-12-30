@@ -1,0 +1,53 @@
+services:
+  dev-portfolio-frontend-vite:
+    image: dev-portfolio-frontend-vite:${GIT_BRANCH:-unknown}
+    hostname: dev-portfolio-frontend-vite
+    container_name: dev-portfolio-frontend-vite
+    build:
+      context: ../../../../
+      dockerfile: ./portfolio/docker/frontend/vite/Dockerfile
+      target: dev
+      args:
+        - ENVIRONMENT=dev
+        - PROJECT=portfolio
+        - ROLE=frontend
+        - SERVICE=vite
+        - GIT_BRANCH=${GIT_BRANCH:-unknown}
+        - USER_NAME=${PORTFOLIO_USER_NAME:-portfolio}
+        - APP_DIR=${PORTFOLIO_APP_DIR:-app}
+        - FRONTEND_PROJECT=${PORTFOLIO_FRONTEND_PROJECT:-frontend}
+        - NODE_VERSION=${PORTFOLIO_NODE_VERSION:-22.12.0}
+        - PNPM_VERSION=${PORTFOLIO_PNPM_VERSION:-9.15.1}
+        - PORT=5173
+        - VSCODE_EXTENSION_JSON=extensions.json
+    depends_on:
+      dev-portfolio-common-proto:
+        condition: service_started
+        required: false
+    restart: on-failure
+    ports:
+      - 5173:5173
+    volumes:
+      - type: bind
+        source: ../../../${PORTFOLIO_APP_DIR:-app}
+        target: /home/${PORTFOLIO_USER_NAME:-portfolio}/${PORTFOLIO_APP_DIR:-app}
+      - type: volume
+        source: dev-portfolio-frontend-node-modules-volume
+        target: /home/${PORTFOLIO_USER_NAME:-portfolio}/${PORTFOLIO_APP_DIR:-app}/${PORTFOLIO_FRONTEND_PROJECT:-frontend}/node_modules
+    init: true
+    tty: true
+    stdin_open: true
+    networks:
+      - dev-portfolio-frontend-network
+    profiles:
+      - dev
+      - dev-portfolio
+      - dev-portfolio-frontend
+
+networks:
+  dev-portfolio-frontend-network:
+    name: dev-portfolio-frontend-network
+
+volumes:
+  dev-portfolio-frontend-node-modules-volume:
+    name: dev-portfolio-frontend-node-modules-volume

@@ -1,0 +1,47 @@
+[
+  {
+    "biographyId": 1,
+    "event": "某高等学校普通科 卒業",
+    "yearMonth": "2016-03"
+  },
+  {
+    "biographyId": 2,
+    "event": "某大学 電気電子工学科 入学",
+    "yearMonth": "2016-04"
+  },
+  {
+    "biographyId": 3,
+    "event": "電気学会 某部門技術委員会奨励賞 受賞",
+    "yearMonth": "2020-02"
+  },
+  {
+    "biographyId": 4,
+    "event": "電気学会 東京支部 電気学術奨励賞 受賞",
+    "yearMonth": "2020-03"
+  },
+  {
+    "biographyId": 5,
+    "event": "同大学 電気電子工学科 卒業",
+    "yearMonth": "2020-03"
+  },
+  {
+    "biographyId": 6,
+    "event": "ITC-CSCC2020 Best Paper Award",
+    "yearMonth": "2020-07"
+  },
+  {
+    "biographyId": 7,
+    "event": "同大学大学院 電気電子工学修士課程 修了",
+    "yearMonth": "2022-03"
+  },
+  {
+    "biographyId": 8,
+    "event": "某モバイルゲーム株式会社 入社",
+    "yearMonth": "2022-04"
+  },
+  {
+    "biographyId": 9,
+    "event": "同社 サーバーサイドエンジニアとして在職中",
+    "yearMonth": "2025-01"
+  }
+]

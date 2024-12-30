@@ -1,0 +1,4 @@
+include:
+  - ./docker/common/ubuntu/compose.yml
+  - ./docker/common/proto/compose.yml
+  - ./docker/frontend/vite/compose.yml
