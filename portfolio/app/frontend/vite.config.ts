@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     TanStackRouterVite()
   ],
-  base: "/portfolio",
+  base: "/portfolio/",
   server: {
     host: true,
     port: 5173,
