@@ -1110,6 +1110,10 @@ function devcontainer::install_packages() {
     duckdb)
       devcontainer::install_duckdb "${_middleware_json}" "${_version}" "${_user}"
       ;;
+    docker)
+      # NOTE: docker は devcontainer features でインストールされるため、手動インストールしない
+      logger::warn 'docker is already installed by devcontainer features.'
+      ;;
     *)
       return 1
       ;;

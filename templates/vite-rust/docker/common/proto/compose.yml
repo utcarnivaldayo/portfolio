@@ -15,7 +15,7 @@ services:
         - PROJECT={{ project_name | kebab_case }}
         - GIT_BRANCH=${GIT_BRANCH:-unknown}
         - USER_NAME={{ '${' ~ project_name | upper_snake_case }}_USER_NAME:-{{ project_name | kebab_case }}}
-        - PROTO_VERSION={{ '${' ~ project_name | upper_snake_case }}_PROTO_VERSION:-0.44.1}
+        - PROTO_VERSION={{ '${' ~ project_name | upper_snake_case }}_PROTO_VERSION:-0.44.2}
     depends_on:
       dev-{{ project_name | kebab_case }}-common-ubuntu:
         condition: service_started
