@@ -87,20 +87,24 @@ const Profile = () => {
                 Introduction
               </h2>
               <div className="py-3">
-                <p className="py-1">はじめまして。ut と申します。</p>
-                <p className="py-1">大学では電気電子工学を専攻し、信号処理・数理最適化に関する研究に従事し修士で修了。某企業でモバイルオンラインゲームのサーバーサイドエンジニアとして、運用・改善を担当して3年です。</p>
-                <p className="py-1">
+                <p className="p-3 ">はじめまして。ut と申します。</p>
+                <p className="p-3">大学では電気電子工学を専攻し、信号処理・数理最適化に関する研究に従事し修士で修了。
+                  某企業でモバイルオンラインゲームのサーバーサイドエンジニアとして、運用・改善を担当して3年です。</p>
+                <p className="p-3">
                   業務では、shell・python・jenkins・mysql・redis を利用し、
                   プライベートでは、rust を好んで利用しています。
                 </p>
-                <p className="py-1">最近は、現場のレガシーな技術スタックに起因する問題に不満を感じ、ドメイン駆動設計・
-                  プラットフォームエンジニアリング・クラウド・コンテナなどの技術を利用した解決策を日々模索しています。</p>
-                <p className="py-1">
+                <p className="p-3">
+                  最近は、現場のレガシーな技術スタックに起因する問題に不満を感じ、ドメイン駆動設計・
+                  プラットフォームエンジニアリング・クラウド・コンテナなどの技術領域に興味をもち、
+                  それらの技術を利用した解決策を日々模索中です。
+                </p>
+                <div className="p-3 border rounded-sm border-gray-400">
                   <a className="no-underline hover:underline" href="https://www.16personalities.com/ja/infj%E5%9E%8B%E3%81%AE%E6%80%A7%E6%A0%BC">INFJ-T</a>・
                   <a className="no-underline hover:underline" href="https://www.rust-lang.org/ja/learn/get-started">Rustacean</a>・
                   <a className="no-underline hover:underline" href="https://coten.co.jp/cotencrew/">Coten Crew</a>・
-                  基本情報処理技術者
-                </p>
+                  基本情報処理技術者・ITパスポート
+                </div>
               </div>
             </div>
           </div>
@@ -136,163 +140,285 @@ const Profile = () => {
         </h2>
       </div>
       <div className="py-3 flex items-center text-center justify-center bg-orange-50">
-        <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-5 content-evenly">
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-3 content-evenly">
+          <div className="py-1 flex-col max-w-xs justify-items-center shadow-md">
             <h3 className="text-2xl text-slate-800 font-mplus1p">
               IDE
             </h3>
-            <div className="font-mplus1p">
-              <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "vscode"}}>
-                <VscVscode className="mx-10" size="3rem"/>
-                vscode
-              </Link>
+            <div className="py-3">
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "vscode"}}>
+                  <VscVscode className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    vscode
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+          <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="text-2xl text-slate-800 font-mplus1p">
-              VCS
+                VCS
             </h3>
-            <div className="p-1 flex-col justify-items-center">
-              <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "git"}}>
-                <FaGit className="mx-10" size="3rem"/>
-                git
-              </Link>
-              <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "github"}}>
-                <FaGithub className="mx-10" size="3rem"/>
-                github
-              </Link>
+            <div className="py-1">
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "git"}}>
+                  <FaGit className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    git
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "github"}}>
+                  <FaGithub className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    github
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+          <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="py-1 text-2xl text-slate-800 font-mplus1p">
               Frontend
             </h3>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "typescript"}}>
-              <SiTypescript className="mx-10" size="3rem"/>
-              typescript
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "react"}}>
-              <FaReact className="mx-10" size="3rem"/>
-              react
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "tailwindcss"}}>
-              <SiTailwindcss className="mx-10" size="3rem"/>
-              tailwindcss
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "unity"}}>
-              <FaUnity className="mx-10" size="3rem"/>
-              unity
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "csharp"}}>
-              <TbBrandCSharp className="mx-10" size="3rem"/>
-              c#
-            </Link>
+            <div className="p-3">
+              <div className="p-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "typescript"}}>
+                  <SiTypescript className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    typescript
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "react"}}>
+                  <FaReact className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    react
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "tailwindcss"}}>
+                  <SiTailwindcss className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    tailwindcss
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "unity"}}>
+                  <FaUnity className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    unity
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "csharp"}}>
+                  <TbBrandCSharp className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    c#
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+          <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="py-1 text-2xl text-slate-800 font-mplus1p">
               Backend
             </h3>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "rust"}}>
-              <FaRust className="mx-10" size="3rem"/>
-              rust
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "python"}}>
-              <FaPython className="mx-10" size="3rem"/>
-              python
-            </Link>
+            <div className="py-3">
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "rust"}}>
+                  <FaRust className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    rust
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "python"}}>
+                  <FaPython className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    python
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+          <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="py-1 text-2xl text-slate-800 font-mplus1p">
-              Infra
+                Infra
             </h3>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "ubuntu"}}>
-              <FaUbuntu className="mx-10" size="3rem"/>
-              ubuntu
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "bash"}}>
-              <SiGnubash className="mx-10" size="3rem"/>
-              bash
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "docker"}}>
-              <FaDocker className="mx-10" size="3rem"/>
-              docker
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "kubernetes"}}>
-              <SiKubernetes className="mx-10" size="3rem"/>
-              kubernetes
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "aws"}}>
-              <FaAws className="mx-10" size="3rem"/>
-              aws
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "opentofu"}}>
-              <SiOpentofu className="mx-10" size="3rem"/>
-              opentofu
-            </Link>
+            <div className="py-3">
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "ubuntu"}}>
+                  <FaUbuntu className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    ubuntu
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "bash"}}>
+                  <SiGnubash className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    bash
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "docker"}}>
+                  <FaDocker className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    docker
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "kubernetes"}}>
+                  <SiKubernetes className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    kubernetes
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "aws"}}>
+                  <FaAws className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    aws
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "opentofu"}}>
+                  <SiOpentofu className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    opentofu
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+          <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="py-1 text-2xl text-slate-800 font-mplus1p">
               Data
             </h3>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "mysql"}}>
-              <DiMysql className="mx-10" size="3rem"/>
-              mysql
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "redis"}}>
-              <DiRedis className="mx-10" size="3rem"/>
-              redis
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "sqlite"}}>
-              <SiSqlite className="mx-10" size="3rem"/>
-              sqlite
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "duckdb"}}>
-              <SiDuckdb className="mx-10" size="3rem"/>
-              duckdb
-            </Link>
+            <div className="py-3">
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "mysql"}}>
+                  <DiMysql className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    mysql
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "redis"}}>
+                  <DiRedis className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    redis
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "sqlite"}}>
+                  <SiSqlite className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    sqlite
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "duckdb"}}>
+                  <SiDuckdb className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    duckdb
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+          <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="py-1 text-2xl text-slate-800 font-mplus1p">
               Secret
             </h3>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "infisical"}}>
-              <FaInfinity className="mx-10" size="3rem"/>
-              infisical
-            </Link>
+            <div className="py-3">
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "infisical"}}>
+                  <FaInfinity className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    infisical
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+          <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="py-1 text-2xl text-slate-800 font-mplus1p">
               CI/CD
             </h3>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "jenkins"}}>
-              <FaJenkins className="mx-10" size="3rem"/>
-              jenkins
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "githubactions"}}>
-              <SiGithubactions className="mx-10" size="3rem"/>
-              github actions
-            </Link>
+            <div className="py-3">
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "jenkins"}}>
+                  <FaJenkins className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    jenkins
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "githubactions"}}>
+                  <SiGithubactions className="mx-10" size="3rem"/>
+                  <div className="text-sm md:text-base">
+                    github actions
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="p-1 flex-col max-w-sm justify-items-center shadow-md">
+          <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="py-1 text-2xl text-slate-800 font-mplus1p" >
               Others
             </h3>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "teamtopology"}}>
-              <TbTopologyStar3 className="mx-10" size="3rem" />
-              team topology
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "DDD"}}>
-              <VscProject className="mx-10" size="3rem" />
-              DDD
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "信号処理"}}>
-              <PiWaveSineFill className="mx-10" size="3rem" />
-              signal processing
-            </Link>
-            <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "数理最適化"}}>
-              <TbMathMin className="mx-10" size="3rem" />
-              mathmatical opt.
-            </Link>
+            <div className="py-3">
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "信号処理"}}>
+                  <PiWaveSineFill className="mx-10" size="3rem" />
+                  <div className="text-sm md:text-base">
+                    信号処理
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "数理最適化"}}>
+                  <TbMathMin className="mx-10" size="3rem" />
+                  <div className="text-sm md:text-base">
+                    数理最適化
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "teamtopology"}}>
+                  <TbTopologyStar3 className="mx-10" size="3rem" />
+                  <div className="text-sm md:text-base">
+                    チームトポロジー
+                  </div>
+                </Link>
+              </div>
+              <div className="py-1">
+                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "DDD"}}>
+                  <VscProject className="mx-10" size="3rem" />
+                  <div className="text-sm md:text-base">
+                    ドメイン駆動設計
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

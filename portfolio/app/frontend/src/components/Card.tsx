@@ -34,7 +34,7 @@ export const Card = (props: CardProps) => {
 
   return (
     <>
-      <div className="p-1 max-w-sm rounded overflow-hidden shadow-lg">
+      <div className="p-1 max-w-xs lg:max-w-sm rounded overflow-hidden shadow-lg">
         <a href={link}>
           {getCoverImage(tags)}
           <div className="px-6 py-4">
