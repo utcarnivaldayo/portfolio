@@ -23,5 +23,18 @@
       "tanstackrouter"
     ],
     "title": "react で作ったポートフォリオサイト"
+  },
+  {
+    "date": "2024-12-30",
+    "link": "https://github.com/utcarnivaldayo/multipasser",
+    "sandboxId": 3,
+    "tags": [
+      "monorepo",
+      "ubuntu",
+      "multipass",
+      "bash",
+      "docker"
+    ],
+    "title": "ローカル仮想環境 monorepo テンプレート 「multipasser」"
   }
 ]

@@ -1,24 +1,28 @@
-import { FaGithub, FaRegNewspaper, FaUser } from "react-icons/fa"
-import { SiZenn, SiGmail } from "react-icons/si"
-import { FiCodesandbox } from "react-icons/fi"
 import speakerLogo from '../assets/img/speaker.png'
 import speakerLogoAnimation from '../assets/img/speaker.gif'
 import { Link } from '@tanstack/react-router'
 import { useState } from "react"
-import { defaultPagenationSearch } from "../schema/pagenationSearch"
+import { NewsLink } from "./NewsLink"
+import { ProfileLink } from "./ProfileLink"
+import { SandboxLink } from "./SandboxLink"
+import { GithubLink } from "./GIthubLink"
+import { ZennLink } from "./ZennLink"
+import { GmailLink } from "./GmailLink"
 
-export const Header = () => {
+interface HeaderProps {
+  githubUser: string,
+  zennUser: string,
+  gmailAddress: string
+}
 
-  const githubName = 'utcarnivaldayo'
-  const githubUrl = 'https://github.com/' + githubName
-  const zennUrl = 'https://zenn.dev/' + githubName
-  const gmailAddress = 'ut.numagotatu@gmail.com'
+export const Header = (props: HeaderProps) => {
+
   const [logo, setLogo] = useState(speakerLogo)
 
   return (
     <>
-      <div className="h-16 flex flex-row bg-teal-400 items-center justify-between">
-        <div className="p-3 m-1">
+      <div className="py-1 grid grid-cols-4 md:grid-cols-12 bg-teal-400">
+        <div className="p-1 md:inline-block col-start-1 col-end-1">
           <Link to="/">
             <img
               src={logo}
@@ -29,46 +33,23 @@ export const Header = () => {
             />
           </Link>
         </div>
-        <div className="p-1 items-center justify-items-center hover:bg-teal-200 text-slate-800 transition-colors duration-300 rounded">
-          <Link to="/news" search={defaultPagenationSearch}>
-            <FaRegNewspaper className="mx-1.5" size="1.5rem"/>
-            <div className="font-mplus1p cursor-pointer">
-              News
-            </div>
-          </Link>
+        <div className="p-1.5 md:col-start-5 md:col-end-3">
+          <NewsLink />
         </div>
-        <div className="p-1 items-center justify-items-center hover:bg-teal-200 text-slate-800 transition-colors duration-300 rounded">
-          <Link to="/profile">
-            <FaUser className="mx-2.5" size="1.5rem"/>
-            <div className="font-mplus1p cursor-pointer">
-              Profile
-            </div>
-          </Link>
+        <div className="p-1.5 md:col-start-7 md:col-end-5">
+          <ProfileLink />
         </div>
-        <div className="p-1 items-center justify-items-center hover:bg-teal-200 text-slate-800 transition-colors duration-300 rounded">
-          <Link to="/sandbox" search={defaultPagenationSearch}>
-            <FiCodesandbox className="mx-4" size="1.5rem"/>
-            <div className="font-mplus1p cursor-pointer">
-              Sandbox
-            </div>
-          </Link>
+        <div className="p-1.5 md:col-start-9 md:col-end-7">
+          <SandboxLink />
         </div>
-        <div className="flex flex-row">
-          <div className="p-1.5 mx-3 items-center justify-items-center cursor-pointer bg-teal-400 hover:bg-teal-200 transition-colors duration-300 rounded-full">
-            <a href={githubUrl}>
-              <FaGithub />
-            </a>
-          </div>
-          <div className="p-1.5 mx-3 items-center justify-items-center cursor-pointer bg-teal-400 hover:bg-teal-200 transition-colors duration-300 rounded-full">
-            <a href={zennUrl}>
-              <SiZenn />
-            </a>
-          </div>
-          <div className="p-1.5 mx-3 items-center justify-items-center cursor-pointer bg-teal-400 hover:bg-teal-200 transition-colors duration-300 rounded-full">
-            <a href={'mailto:' + gmailAddress}>
-              <SiGmail />
-            </a>
-          </div>
+        <div className="hidden md:block pt-6 col-start-1 col-end-1 md:col-start-10 md:col-end-10">
+          <GithubLink user={props.githubUser} />
+        </div>
+        <div className="hidden md:block pt-6 col-start-2 col-end-2 md:col-start-11 md:col-end-11">
+          <ZennLink user={props.zennUser} />
+        </div>
+        <div className="hidden md:block pt-6 col-start-3 col-end-3 md:col-start-12 md:col-end-12">
+          <GmailLink address={props.gmailAddress} />
         </div>
       </div>
     </>

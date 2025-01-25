@@ -85,5 +85,18 @@
       "tanstackrouter"
     ],
     "title": "TS + React + tailwindcss でポートフォリオサイトのリニューアル"
+  },
+  {
+    "date": "2024-12-30",
+    "link": "https://github.com/utcarnivaldayo/multipasser",
+    "newsId": 8,
+    "tags": [
+      "monorepo",
+      "ubuntu",
+      "multipass",
+      "bash",
+      "docker"
+    ],
+    "title": "ローカル仮想環境 monorepo テンプレート 「multipasser」を公開"
   }
 ]
