@@ -3,7 +3,7 @@ import { Card } from '../components/Card'
 import newsMaster from '../assets/masterdata/newsMaster.json'
 import { AjvSingleton } from '../util/ajv'
 import { newsItemSchema, NewsItem } from '../schema/newsItem.ts'
-import {pagenationSearchSchema, PagenationSearch, defaultPagenationSearch } from '../schema/pagenationSearch.ts'
+import { pagenationSearchSchema, PagenationSearch, defaultPagenationSearch } from '../schema/pagenationSearch.ts'
 import { PageNationButton, isVaildPageAndLimit } from '../components/PageNationButton'
 
 const validatePageNationSearch = (query: Record<string, unknown>): PagenationSearch => {
@@ -15,11 +15,12 @@ const validatePageNationSearch = (query: Record<string, unknown>): PagenationSea
   const pageIndex = query.pageIndex as number
   const limit = query.limit as number
   const tag = query.tag as string | undefined
-  const tagedLength = tag === undefined ? newsMaster.length : newsMaster.filter((item: NewsItem) => item.tags.includes(tag)).length
+  const tagedLength = tag === undefined ?
+    newsMaster.length : newsMaster.filter((item: NewsItem) => item.tags.includes(tag)).length
   return isVaildPageAndLimit(pageIndex, limit, tagedLength) ? query as PagenationSearch : defaultPagenationSearch
 }
 
-const NEWS_PATH='/news'
+const NEWS_PATH = '/news'
 
 const News = () => {
   const { pageIndex, limit, tag } = Route.useSearch()
@@ -67,7 +68,8 @@ const News = () => {
 
   validateMaster()
   const newsItems = filterByPageNation(newsMaster, pageIndex, limit, tag)
-  const tagedLength = tag === undefined ? newsMaster.length : newsMaster.filter((news: NewsItem) => news.tags.includes(tag)).length
+  const tagedLength = tag === undefined ?
+    newsMaster.length : newsMaster.filter((news: NewsItem) => news.tags.includes(tag)).length
 
   return (
     <div className="bg-teal-50">

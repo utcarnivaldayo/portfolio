@@ -23,7 +23,7 @@ export const SandboxLink = () => {
       <div>
         <Link to="/sandbox" className={positionConfig.join(' ')} search={defaultPagenationSearch}>
           <div className={cursorConfig.join(' ')}>
-          <FiCodesandbox className="mx-4" size="1.5rem"/>
+            <FiCodesandbox className="mx-4" size="1.5rem" />
             <div className="font-mplus1p cursor-pointer">
               Sandbox
             </div>

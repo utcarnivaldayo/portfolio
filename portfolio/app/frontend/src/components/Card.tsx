@@ -21,7 +21,7 @@ export const Card = (props: CardProps) => {
               <img className="w-full" src={zennLogo} alt="zenn" />
             </div>
           )
-        }
+      }
     }
     return (
       <div className="p-1 flex items-center justify-center">
@@ -31,6 +31,18 @@ export const Card = (props: CardProps) => {
   }
 
   const { path, title, date, link, tags } = props
+  const tagButtonConfig: string[] = [
+    'inline-block',
+    'bg-gray-200',
+    'rounded-full',
+    'px-3',
+    'py-1',
+    'text-sm',
+    'font-semibold',
+    'text-gray-700',
+    'mr-2',
+    'mb-2',
+  ]
 
   return (
     <>
@@ -46,8 +58,8 @@ export const Card = (props: CardProps) => {
         </a>
         <div className="px-6 pt-4 pb-2">
           {tags.map(tag => (
-            <span key={tag} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-              <Link to={path} search={{pageIndex: 1, limit: 6, tag}}>#{tag}</Link>
+            <span key={tag} className={tagButtonConfig.join(' ')}>
+              <Link to={path} search={{ pageIndex: 1, limit: 6, tag }}>#{tag}</Link>
             </span>
           ))}
         </div>

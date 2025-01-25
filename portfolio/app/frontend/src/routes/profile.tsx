@@ -58,12 +58,12 @@ const Profile = () => {
         <tr>
           <td className="p-1 border border-gray-400">{biographyItem.yearMonth.replace(/-/g, '/')}</td>
           <td className="p-1 border border-gray-400">{
-              biographyItem.link != null ? (
-                <a className="no-underline hover:underline" href={biographyItem.link}>
-                  {biographyItem.event}
-                </a>
-              ) : biographyItem.event
-            }
+            biographyItem.link != null ? (
+              <a className="no-underline hover:underline" href={biographyItem.link}>
+                {biographyItem.event}
+              </a>
+            ) : biographyItem.event
+          }
           </td>
         </tr>
       )
@@ -72,6 +72,11 @@ const Profile = () => {
   }
 
   validateMaster()
+
+  const sixtyPersonalitiesLink = 'https://www.16personalities.com/ja/infj%E5%9E%8B%E3%81%AE%E6%80%A7%E6%A0%BC'
+  const rustLangLink = 'https://www.rust-lang.org/ja/learn/get-started'
+  const cotenLink = 'https://coten.co.jp/cotencrew/'
+
   return (
     <>
       <div className="bg-top-image bg-cover bg-left-top bg-no-repeat w-screen flex items-center justify-center">
@@ -100,9 +105,9 @@ const Profile = () => {
                   それらの技術を利用した解決策を日々模索中です。
                 </p>
                 <div className="p-3 border rounded-sm border-gray-400">
-                  <a className="no-underline hover:underline" href="https://www.16personalities.com/ja/infj%E5%9E%8B%E3%81%AE%E6%80%A7%E6%A0%BC">INFJ-T</a>・
-                  <a className="no-underline hover:underline" href="https://www.rust-lang.org/ja/learn/get-started">Rustacean</a>・
-                  <a className="no-underline hover:underline" href="https://coten.co.jp/cotencrew/">Coten Crew</a>・
+                  <a className="no-underline hover:underline" href={sixtyPersonalitiesLink}>INFJ-T</a>・
+                  <a className="no-underline hover:underline" href={rustLangLink}>Rustacean</a>・
+                  <a className="no-underline hover:underline" href={cotenLink}>Coten Crew</a>・
                   基本情報処理技術者・ITパスポート
                 </div>
               </div>
@@ -110,7 +115,11 @@ const Profile = () => {
           </div>
           <div className="p-1 flex-col max-w-sm order-1 lg:order-2 justify-items-center">
             <div className="my-24">
-              <img src={speakerLogoAnimation} alt='The walking speaker is ut' className="p-3 h-36 w-36 border border-gray-400 rounded-full bg-white" />
+              <img
+                src={speakerLogoAnimation}
+                alt='The walking speaker is ut'
+                className="p-3 h-36 w-36 border border-gray-400 rounded-full bg-white"
+              />
               <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
                 私
               </figcaption>
@@ -147,8 +156,8 @@ const Profile = () => {
             </h3>
             <div className="py-3">
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "vscode"}}>
-                  <VscVscode className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "vscode" }}>
+                  <VscVscode className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     vscode
                   </div>
@@ -158,20 +167,20 @@ const Profile = () => {
           </div>
           <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="text-2xl text-slate-800 font-mplus1p">
-                VCS
+              VCS
             </h3>
             <div className="py-1">
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "git"}}>
-                  <FaGit className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "git" }}>
+                  <FaGit className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     git
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "github"}}>
-                  <FaGithub className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "github" }}>
+                  <FaGithub className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     github
                   </div>
@@ -185,40 +194,40 @@ const Profile = () => {
             </h3>
             <div className="p-3">
               <div className="p-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "typescript"}}>
-                  <SiTypescript className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "typescript" }}>
+                  <SiTypescript className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     typescript
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "react"}}>
-                  <FaReact className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "react" }}>
+                  <FaReact className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     react
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "tailwindcss"}}>
-                  <SiTailwindcss className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "tailwindcss" }}>
+                  <SiTailwindcss className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     tailwindcss
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "unity"}}>
-                  <FaUnity className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "unity" }}>
+                  <FaUnity className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     unity
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "csharp"}}>
-                  <TbBrandCSharp className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "csharp" }}>
+                  <TbBrandCSharp className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     c#
                   </div>
@@ -232,16 +241,16 @@ const Profile = () => {
             </h3>
             <div className="py-3">
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "rust"}}>
-                  <FaRust className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "rust" }}>
+                  <FaRust className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     rust
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "python"}}>
-                  <FaPython className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "python" }}>
+                  <FaPython className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     python
                   </div>
@@ -251,52 +260,52 @@ const Profile = () => {
           </div>
           <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
             <h3 className="py-1 text-2xl text-slate-800 font-mplus1p">
-                Infra
+              Infra
             </h3>
             <div className="py-3">
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "ubuntu"}}>
-                  <FaUbuntu className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "ubuntu" }}>
+                  <FaUbuntu className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     ubuntu
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "bash"}}>
-                  <SiGnubash className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "bash" }}>
+                  <SiGnubash className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     bash
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "docker"}}>
-                  <FaDocker className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "docker" }}>
+                  <FaDocker className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     docker
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "kubernetes"}}>
-                  <SiKubernetes className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "kubernetes" }}>
+                  <SiKubernetes className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     kubernetes
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "aws"}}>
-                  <FaAws className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "aws" }}>
+                  <FaAws className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     aws
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "opentofu"}}>
-                  <SiOpentofu className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "opentofu" }}>
+                  <SiOpentofu className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     opentofu
                   </div>
@@ -310,32 +319,32 @@ const Profile = () => {
             </h3>
             <div className="py-3">
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "mysql"}}>
-                  <DiMysql className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "mysql" }}>
+                  <DiMysql className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     mysql
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "redis"}}>
-                  <DiRedis className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "redis" }}>
+                  <DiRedis className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     redis
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "sqlite"}}>
-                  <SiSqlite className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "sqlite" }}>
+                  <SiSqlite className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     sqlite
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "duckdb"}}>
-                  <SiDuckdb className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "duckdb" }}>
+                  <SiDuckdb className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     duckdb
                   </div>
@@ -349,8 +358,8 @@ const Profile = () => {
             </h3>
             <div className="py-3">
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "infisical"}}>
-                  <FaInfinity className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "infisical" }}>
+                  <FaInfinity className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     infisical
                   </div>
@@ -364,16 +373,16 @@ const Profile = () => {
             </h3>
             <div className="py-3">
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "jenkins"}}>
-                  <FaJenkins className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "jenkins" }}>
+                  <FaJenkins className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     jenkins
                   </div>
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "githubactions"}}>
-                  <SiGithubactions className="mx-10" size="3rem"/>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "githubactions" }}>
+                  <SiGithubactions className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     github actions
                   </div>
@@ -387,7 +396,7 @@ const Profile = () => {
             </h3>
             <div className="py-3">
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "信号処理"}}>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "信号処理" }}>
                   <PiWaveSineFill className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     信号処理
@@ -395,7 +404,7 @@ const Profile = () => {
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "数理最適化"}}>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "数理最適化" }}>
                   <TbMathMin className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     数理最適化
@@ -403,7 +412,7 @@ const Profile = () => {
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "teamtopology"}}>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "teamtopology" }}>
                   <TbTopologyStar3 className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     チームトポロジー
@@ -411,7 +420,7 @@ const Profile = () => {
                 </Link>
               </div>
               <div className="py-1">
-                <Link to="/news" search={{pageIndex: 1, limit: 6, tag: "DDD"}}>
+                <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "DDD" }}>
                   <VscProject className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
                     ドメイン駆動設計

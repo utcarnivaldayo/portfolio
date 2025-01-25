@@ -3,7 +3,7 @@ import { Card } from '../components/Card'
 import sandboxMaster from '../assets/masterdata/sandboxMaster.json'
 import { AjvSingleton } from '../util/ajv'
 import { sandboxItemSchema, SandboxItem } from '../schema/sandboxItem.ts'
-import {pagenationSearchSchema, PagenationSearch, defaultPagenationSearch } from '../schema/pagenationSearch.ts'
+import { pagenationSearchSchema, PagenationSearch, defaultPagenationSearch } from '../schema/pagenationSearch.ts'
 import { PageNationButton, isVaildPageAndLimit } from '../components/PageNationButton'
 
 const validatePageNationSearch = (query: Record<string, unknown>): PagenationSearch => {
@@ -15,11 +15,12 @@ const validatePageNationSearch = (query: Record<string, unknown>): PagenationSea
   const pageIndex = query.pageIndex as number
   const limit = query.limit as number
   const tag = query.tag as string | undefined
-  const tagedLength = tag === undefined ? sandboxMaster.length : sandboxMaster.filter((item: SandboxItem) => item.tags.includes(tag)).length
+  const tagedLength = tag === undefined ?
+    sandboxMaster.length : sandboxMaster.filter((item: SandboxItem) => item.tags.includes(tag)).length
   return isVaildPageAndLimit(pageIndex, limit, tagedLength) ? query as PagenationSearch : defaultPagenationSearch
 }
 
-const SANDBOX_PATH='/sandbox'
+const SANDBOX_PATH = '/sandbox'
 
 const Sandbox = () => {
   const { pageIndex, limit, tag } = Route.useSearch()
@@ -35,7 +36,12 @@ const Sandbox = () => {
     })
   }
 
-  const filterByPageNation = (sandboxItems: SandboxItem[], pageIndex: number, limit: number, tag: string | undefined) => {
+  const filterByPageNation = (
+    sandboxItems: SandboxItem[],
+    pageIndex: number,
+    limit: number,
+    tag: string | undefined
+  ) => {
     return [...sandboxItems]
       .filter((item: SandboxItem) => tag === undefined || item.tags.includes(tag))
       .sort((a: SandboxItem, b: SandboxItem) => b.sandboxId - a.sandboxId)
@@ -51,24 +57,25 @@ const Sandbox = () => {
       </div>
     );
     const contents = sandboxItems.map((sandboxItem: SandboxItem) => {
-        return (
-          <Card
-            key={sandboxItem.sandboxId}
-            path={path}
-            title={sandboxItem.title}
-            date={sandboxItem.date.replace(/-/g, '/')}
-            link={sandboxItem.link}
-            tags={sandboxItem.tags}
-          />
-        )
-      }
+      return (
+        <Card
+          key={sandboxItem.sandboxId}
+          path={path}
+          title={sandboxItem.title}
+          date={sandboxItem.date.replace(/-/g, '/')}
+          link={sandboxItem.link}
+          tags={sandboxItem.tags}
+        />
+      )
+    }
     );
     return contents.length > 0 ? contents : no_content
   }
 
   validateMaster()
   const sandboxItems = filterByPageNation(sandboxMaster, pageIndex, limit, tag)
-  const tagedLength = tag === undefined ? sandboxMaster.length : sandboxMaster.filter((item: SandboxItem) => item.tags.includes(tag)).length
+  const tagedLength = tag === undefined ?
+    sandboxMaster.length : sandboxMaster.filter((item: SandboxItem) => item.tags.includes(tag)).length
 
   return (
     <div className="bg-teal-50">

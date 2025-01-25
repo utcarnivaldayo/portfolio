@@ -24,7 +24,7 @@ export const ProfileLink = () => {
       <div>
         <Link to="/profile" className={positionConfig.join(' ')} search={defaultPagenationSearch}>
           <div className={cursorConfig.join(' ')}>
-            <FaUser className="mx-2.5" size="1.5rem"/>
+            <FaUser className="mx-2.5" size="1.5rem" />
             <div className="font-mplus1p cursor-pointer">
               Profile
             </div>
