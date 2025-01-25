@@ -11,10 +11,21 @@ interface FooterProps {
 
 export const Footer = (props: FooterProps) => {
 
+  const copyRightConfig: string[] = [
+    "m-1",
+    "col-span-full",
+    "md:col-start-6",
+    "md:col-end-8",
+    "font-mplus1p",
+    "lg:text-base",
+    "md:text-sm",
+    "text-center"
+  ]
+
   return (
     <>
       <div className="py-3 grid grid-cols-3 md:grid-cols-12 bg-teal-400">
-        <div className="m-1 col-span-full md:col-start-6 md:col-end-8 font-mplus1p lg:text-base md:text-sm text-center">
+        <div className={copyRightConfig.join(' ')}>
           &copy; {props.copyRight}
         </div>
         <div className="m-1 col-start-1 col-end-1 md:col-start-10 md:col-end-10">

@@ -24,7 +24,7 @@ export const NewsLink = () => {
       <div>
         <Link to="/news" className={positionConfig.join(' ')} search={defaultPagenationSearch}>
           <div className={cursorConfig.join(' ')}>
-            <FaRegNewspaper className="mx-1.5" size="1.5rem"/>
+            <FaRegNewspaper className="mx-1.5" size="1.5rem" />
             <div className="font-mplus1p cursor-pointer">
               News
             </div>
