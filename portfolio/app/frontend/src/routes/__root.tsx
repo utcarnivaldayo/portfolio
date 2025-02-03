@@ -4,6 +4,7 @@ import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { NotFound } from '../components/NotFound'
 
+
 export const Route = createRootRoute({
   component: () => {
     const copyRight: string = 'ut'
@@ -24,7 +25,7 @@ export const Route = createRootRoute({
         <div className="grow bg-teal-50">
           <Outlet />
         </div>
-        <TanStackRouterDevtools />
+        {import.meta.env.DEV ? <TanStackRouterDevtools /> : null}
         <Footer {...footerProps} />
       </div>
     )
