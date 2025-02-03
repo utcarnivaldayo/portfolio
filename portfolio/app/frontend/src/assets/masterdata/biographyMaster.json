@@ -1,32 +1,35 @@
 [
   {
     "biographyId": 1,
-    "event": "某高等学校普通科 卒業",
+    "event": "越谷北高等学校普通科 卒業",
     "yearMonth": "2016-03"
   },
   {
     "biographyId": 2,
-    "event": "某大学 電気電子工学科 入学",
+    "event": "東京電機大学 電気電子工学部 入学",
     "yearMonth": "2016-04"
   },
   {
     "biographyId": 3,
-    "event": "電気学会 某部門技術委員会奨励賞 受賞",
+    "event": "電気学会 電子・情報・システム部門技術委員会奨励賞 受賞",
+    "link": "https://www.dendai.ac.jp/dendai-people/20200623-01.html",
     "yearMonth": "2020-02"
   },
   {
     "biographyId": 4,
     "event": "電気学会 東京支部 電気学術奨励賞 受賞",
+    "link": "https://www.dendai.ac.jp/dendai-people/20200727-01.html",
     "yearMonth": "2020-03"
   },
   {
     "biographyId": 5,
-    "event": "同大学 電気電子工学科 卒業",
+    "event": "同大学 電気電子工学部 卒業",
     "yearMonth": "2020-03"
   },
   {
     "biographyId": 6,
     "event": "ITC-CSCC2020 Best Paper Award",
+    "link": "https://www.dendai.ac.jp/dendai-people/20210921-01.html",
     "yearMonth": "2020-07"
   },
   {
@@ -36,12 +39,18 @@
   },
   {
     "biographyId": 8,
-    "event": "某モバイルゲーム株式会社 入社",
+    "event": "KLab 株式会社 入社",
+    "link": "https://www.klab.com/jp/",
     "yearMonth": "2022-04"
   },
   {
     "biographyId": 9,
-    "event": "同社 サーバーサイドエンジニアとして在職中",
-    "yearMonth": "2025-01"
+    "event": "同社 ゲーム案件でサーバーサイドエンジニアとして運用・保守を担当",
+    "yearMonth": "2022-08"
+  },
+  {
+    "biographyId": 10,
+    "event": "同社 退職",
+    "yearMonth": "2025-02"
   }
 ]
