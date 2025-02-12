@@ -9,7 +9,7 @@ services:
       args:
         - UBUNTU_VERSION=${PORTFOLIO_UBUNTU_VERSION:-24.04}
         - USER_NAME=${PORTFOLIO_USER_NAME:-portfolio}
-        - USER_PASSWORD=${PORTFOLIO_USER_PASSWORD}
+        - USER_PASSWORD=${PORTFOLIO_USER_PASSWORD:-portfolio}
     init: true
     profiles:
       - dev

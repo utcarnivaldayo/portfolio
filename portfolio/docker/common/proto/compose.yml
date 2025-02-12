@@ -11,7 +11,7 @@ services:
         - PROJECT=portfolio
         - GIT_BRANCH=${GIT_BRANCH:-unknown}
         - USER_NAME=${PORTFOLIO_USER_NAME:-portfolio}
-        - PROTO_VERSION=${PORTFOLIO_PROTO_VERSION:-0.44.1}
+        - PROTO_VERSION=${PORTFOLIO_PROTO_VERSION:-0.45.2}
     depends_on:
       dev-portfolio-common-ubuntu:
         condition: service_started
