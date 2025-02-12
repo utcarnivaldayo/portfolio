@@ -17,11 +17,11 @@ import {
   SiDuckdb,
   SiSqlite,
   SiGnubash,
-  SiOpentofu,
   SiGithubactions,
-  SiKubernetes,
   SiTailwindcss
 } from "react-icons/si"
+// SiOpentofu,
+// SiKubernetes,
 import { TbTopologyStar3, TbMathMin, TbBrandCSharp } from "react-icons/tb"
 import { DiRedis, DiMysql } from "react-icons/di"
 import { PiWaveSineFill } from "react-icons/pi";
