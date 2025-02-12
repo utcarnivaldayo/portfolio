@@ -287,7 +287,7 @@ const Profile = () => {
                   </div>
                 </Link>
               </div>
-              <div className="py-1">
+              {/*<div className="py-1">
                 <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "kubernetes" }}>
                   <SiKubernetes className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
@@ -295,6 +295,7 @@ const Profile = () => {
                   </div>
                 </Link>
               </div>
+              */}
               <div className="py-1">
                 <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "aws" }}>
                   <FaAws className="mx-10" size="3rem" />
@@ -303,7 +304,7 @@ const Profile = () => {
                   </div>
                 </Link>
               </div>
-              <div className="py-1">
+              {/*<div className="py-1">
                 <Link to="/news" search={{ pageIndex: 1, limit: 6, tag: "opentofu" }}>
                   <SiOpentofu className="mx-10" size="3rem" />
                   <div className="text-sm md:text-base">
@@ -311,6 +312,7 @@ const Profile = () => {
                   </div>
                 </Link>
               </div>
+              */}
             </div>
           </div>
           <div className="py-1 flex-col max-w-2xs justify-items-center shadow-md">
