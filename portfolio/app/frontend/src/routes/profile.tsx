@@ -108,7 +108,7 @@ const Profile = () => {
                   <a className="no-underline hover:underline" href={sixtyPersonalitiesLink}>INFJ-T</a>・
                   <a className="no-underline hover:underline" href={rustLangLink}>Rustacean</a>・
                   <a className="no-underline hover:underline" href={cotenLink}>Coten Crew</a>・
-                  基本情報処理技術者・ITパスポート
+                  AWS SAA・基本情報処理技術者・ITパスポート
                 </div>
               </div>
             </div>
