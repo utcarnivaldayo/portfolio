@@ -23,6 +23,9 @@ const Index = () => {
           <h1 className="text-5xl md:text-7xl lg:text-8xl text-slate-200">
             Optimizing Digital Experiences
           </h1>
+          <p className="mt-5 w-screen text-center font-mplus1p text-slate-300">
+            ディジタル技術を通じて、顧客・開発者・運用者の全員が「知」を共有し「楽」をできるプロダクトを。
+          </p>
         </div>
         <div className="p-3 w-screen text-center font-mplus1p bg-orange-500/70">
           <h2 className="text-3xl md:text-4xl lg:text-5xl text-slate-200">
