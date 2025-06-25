@@ -94,15 +94,16 @@ const Profile = () => {
               <div className="py-3">
                 <p className="p-3 ">はじめまして。ut と申します。</p>
                 <p className="p-3">大学では電気電子工学を専攻し、信号処理・数理最適化に関する研究に従事し修士で修了。
-                  某企業でモバイルオンラインゲームのサーバーサイドエンジニアとして、運用・改善を担当して3年です。</p>
+                  某企業でモバイルオンラインゲームのサーバーサイドエンジニアとして、運用・改善を約3年間担当。
+                  直近は、バス業界向けの業務システムを TypeScript + Pulumi を駆使し、AWS サーバレスアーキテクチャを採用し、開発している。
+                </p>
                 <p className="p-3">
-                  業務では、shell・python・jenkins・mysql・redis を利用し、
-                  プライベートでは、rust を好んで利用しています。
+                  業務では、Shell・Python・Jenkins・Mysql・Redis・Typescript・AWS・Pulumi を利用し、プライベートでは、Rust を好んで利用。
                 </p>
                 <p className="p-3">
                   最近は、現場のレガシーな技術スタックに起因する問題に不満を感じ、ドメイン駆動設計・
                   プラットフォームエンジニアリング・クラウド・コンテナなどの技術領域に興味をもち、
-                  それらの技術を利用した解決策を日々模索中です。
+                  それらの技術を利用した解決策を日々模索中。
                 </p>
                 <div className="p-3 border rounded-sm border-gray-400">
                   <a className="no-underline hover:underline" href={sixtyPersonalitiesLink}>INFJ-T</a>・
