@@ -98,5 +98,61 @@
       "docker"
     ],
     "title": "ローカル仮想環境 monorepo テンプレート 「multipasser」を公開"
+  },
+  {
+    "date": "2025-04-04",
+    "link": "https://zenn.dev/numagotatu/articles/2025-04-04-dynamo-multiple-json-store",
+    "newsId": 9,
+    "tags": [
+      "技術記事",
+      "zenn",
+      "aws",
+      "dynamodb",
+      "cli"
+    ],
+    "title": "AWS CLI で DynamoDB のデータ型記述子なしに複数 json データ投入"
+  },
+  {
+    "date": "2025-06-08",
+    "link": "https://zenn.dev/utcarnivaldayo/articles/2025-06-08-tbls-aurora-serverless-install-tips",
+    "newsId": 10,
+    "tags": [
+      "技術記事",
+      "zenn",
+      "aws",
+      "aurora",
+      "postgresql",
+      "go",
+      "tbls"
+    ],
+    "title": "tbls を Aurora Serverless・DSQL で使おうとしてハマったときの TIPS"
+  },
+  {
+    "date": "2025-06-22",
+    "link": "https://zenn.dev/utcarnivaldayo/articles/2025-06-22-pulumi-ts-svless",
+    "newsId": 11,
+    "tags": [
+      "技術記事",
+      "zenn",
+      "aws",
+      "pulumi",
+      "typescript",
+      "serverless"
+    ],
+    "title": "「そのインフラ、次世代 IaC Pulumi を使って TypeScript で書いてみませんか？」という記事で Zenn 主催の TypeScript 記事コンテストに参加"
+  },
+  {
+    "date": "2025-06-22",
+    "link": "https://zenn.dev/utcarnivaldayo/books/pulumi-lambadlith",
+    "newsId": 12,
+    "tags": [
+      "書籍",
+      "zenn",
+      "aws",
+      "pulumi",
+      "typescript",
+      "serverless"
+    ],
+    "title": "Zenn book 「もう TypeScript だけでいい。次世代 IaC Pulumi で最高の体験にする AWS サーバレスアプリ開発」を公開"
   }
 ]

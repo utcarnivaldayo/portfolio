@@ -52,5 +52,11 @@
     "biographyId": 10,
     "event": "同社 退職",
     "yearMonth": "2025-02"
+  },
+  {
+    "biographyId": 11,
+    "event": "有限会社テイク AWS・バックエンドエンジニアとして案件参画",
+    "link": "http://www.take-kasukabe.jp/outline.html",
+    "yearMonth": "2025-06"
   }
 ]
